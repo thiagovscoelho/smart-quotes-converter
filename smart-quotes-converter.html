@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Quotes Converter</title>
+    
+    <!-- Webfonts Embed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=IBM+Plex+Serif:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            margin: 50px;
+            padding: 0;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 60px;
+            text-align: center;
+        }
+
+        textarea {
+            font-family: 'IBM Plex Serif', serif;
+            width: 100%;
+            max-width: 1100px;
+            height: 200px;
+            font-size: 32px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #convertButton {
+            font-family: 'IBM Plex Sans', sans-serif;
+            padding: 10px 20px;
+            font-size: 32px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #convertButton:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Smart Quotes Converter</h1>
+    
+    <!-- Adding the form with id "form" and textarea with name "text" -->
+    <form id="form">
+        <textarea name="text" placeholder="Type or paste your text here..."></textarea><br>
+        <button id="convertButton" type="button">Convert Quotes</button>
+    </form>
+
+    <script src="Auto type Smart Quotes.js"></script>
+    <script src="Convert Text to Smart Quotes.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var textArea = document.querySelector('textarea[name="text"]');
+
+            // Manual conversion on button click using the correct function
+            document.getElementById('convertButton').addEventListener('click', function() {
+                var text = textArea.value;
+
+                // Call the correct smart quotes conversion function
+                if (typeof smartQuotes === 'function') {
+                    textArea.value = smartQuotes(text);
+                } else {
+                    alert('Smart quotes conversion function not found!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
