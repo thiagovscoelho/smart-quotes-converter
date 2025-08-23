@@ -1,92 +1,361 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Quotes Converter</title>
-    
-    <!-- Webfonts Embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=IBM+Plex+Serif:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'IBM Plex Sans', sans-serif;
-            margin: 50px;
-            padding: 0;
-            background-color: #f4f4f9;
-            text-align: center;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Quotes Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=IBM+Plex+Serif:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --fg: #1e2228;
+      --muted: #5b6473;
+      --accent: #3b82f6;
+      --border: #dfe3ea;
+      --btn-bg: #ffffff;
+      --btn-fg: #172033;
+      --btn-hover: #eef2ff;
+      --shadow: 0 10px 24px rgba(0,0,0,.08);
+      --radius: 16px;
+    }
+    [data-theme="dark"] {
+      --bg: #0c1116;
+      --fg: #e6ebf2;
+      --muted: #a0aec0;
+      --accent: #60a5fa;
+      --border: #243141;
+      --btn-bg: #0f1620;
+      --btn-fg: #e6ebf2;
+      --btn-hover: #152033;
+      --shadow: 0 10px 24px rgba(0,0,0,.5);
+    }
+    /* High-contrast white (black on white) */
+    [data-theme="hcw"] {
+      --bg: #ffffff;
+      --fg: #000000;
+      --muted: #000000;
+      --accent: #000000;
+      --border: #000000;
+      --btn-bg: #ffffff;
+      --btn-fg: #000000;
+      --btn-hover: #e6e6e6;
+      --shadow: none;
+    }
+    /* High-contrast black (white on black) */
+    [data-theme="hcb"] {
+      --bg: #000000;
+      --fg: #ffffff;
+      --muted: #ffffff;
+      --accent: #ffffff;
+      --border: #ffffff;
+      --btn-bg: #000000;
+      --btn-fg: #ffffff;
+      --btn-hover: #111111;
+      --shadow: none;
+    }
 
-        h1 {
-            font-size: 60px;
-            text-align: center;
-        }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.45;
+    }
 
-        textarea {
-            font-family: 'IBM Plex Serif', serif;
-            width: 100%;
-            max-width: 1100px;
-            height: 200px;
-            font-size: 32px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
+    .container {
+      max-width: 980px;
+      margin: clamp(16px, 3vw, 32px) auto;
+      padding: 0 clamp(12px, 2vw, 20px);
+    }
 
-        #convertButton {
-            font-family: 'IBM Plex Sans', sans-serif;
-            padding: 10px 20px;
-            font-size: 32px;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 16px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-family: "IBM Plex Serif", Georgia, serif;
+      font-weight: 600;
+      font-size: clamp(22px, 4vw, 34px);
+      letter-spacing: .2px;
+      margin: 0;
+    }
 
-        #convertButton:hover {
-            background-color: #0056b3;
-        }
+    .card {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(12px, 2vw, 18px);
+    }
 
-    </style>
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+    .toolbar .left, .toolbar .right { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    select.theme {
+      appearance: none;
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font: inherit;
+      box-shadow: var(--shadow);
+    }
+
+    .btn {
+      appearance: none;
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font: 500 14px/1 "IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      cursor: pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover { background: var(--btn-hover); }
+    .btn:active { transform: translateY(1px) scale(.99); }
+
+    .btn.primary { border-color: var(--accent); }
+
+    .group {
+      display: inline-flex; gap: 6px; flex-wrap: wrap;
+      background: transparent;
+      align-items: center;
+    }
+
+    label.small { font-size: 12px; color: var(--muted); }
+
+    textarea#editor {
+      width: 100%;
+      height: 52vh;
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px 18px;
+      font: 400 1.05rem/1.6 "IBM Plex Serif", Georgia, serif;
+      caret-color: var(--accent);
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
+    }
+
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    footer { margin-top: 12px; color: var(--muted); font-size: 12px; }
+    code.kbd { padding: 0 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--btn-bg); }
+  </style>
 </head>
 <body>
-    <h1>Smart Quotes Converter</h1>
-    
-    <!-- Adding the form with id "form" and textarea with name "text" -->
-    <form id="form">
-        <textarea name="text" placeholder="Type or paste your text here..."></textarea><br>
-        <button id="convertButton" type="button">Convert Quotes</button>
-    </form>
+  <div class="container" id="app">
+    <header>
+      <h1>Smart Quotes Converter</h1>
+      <div class="row" style="margin-left:auto">
+        <label class="small" for="theme">Theme</label>
+        <select id="theme" class="theme" aria-label="Theme selector">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="hcw">High-contrast White</option>
+          <option value="hcb">High-contrast Black</option>
+        </select>
+      </div>
+    </header>
 
-    <script src="Auto type Smart Quotes.js"></script>
-    <script src="Convert Text to Smart Quotes.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var textArea = document.querySelector('textarea[name="text"]');
+    <div class="card">
+      <div class="toolbar">
+        <div class="left">
+          <button class="btn primary" id="bulkSmart" title="Convert all straight quotes to smart quotes (curly)">Convert → Smart</button>
+          <button class="btn" id="bulkStraight" title="Convert all curly quotes back to straight quotes">Convert → Straight</button>
+        </div>
+        <div class="right">
+          <div class="group" aria-label="Insert characters">
+            <label class="small">Insert:</label>
+            <button class="btn" data-insert="'" title="Insert straight apostrophe">'</button>
+            <button class="btn" data-insert='"' title="Insert straight double quote">"</button>
+            <button class="btn" data-insert="‘" title="Insert left single quotation mark">‘</button>
+            <button class="btn" data-insert="’" title="Insert right single quotation mark / apostrophe">’</button>
+            <button class="btn" data-insert="“" title="Insert left double quotation mark">“</button>
+            <button class="btn" data-insert="”" title="Insert right double quotation mark">”</button>
+            <button class="btn" data-insert="′" title="Insert prime (minutes/feet)">′</button>
+            <button class="btn" data-insert="″" title="Insert double prime (seconds/inches)">″</button>
+            <button class="btn" data-insert="`" title="Insert backtick">`</button>
+          </div>
+        </div>
+      </div>
 
-            // Manual conversion on button click using the correct function
-            document.getElementById('convertButton').addEventListener('click', function() {
-                var text = textArea.value;
+      <textarea id="editor" aria-label="Text editor" placeholder="Type or paste here. Typing straight quotes ' and &quot; will auto-convert to smart quotes based on context."></textarea>
 
-                // Call the correct smart quotes conversion function
-                if (typeof smartQuotes === 'function') {
-                    textArea.value = smartQuotes(text);
-                } else {
-                    alert('Smart quotes conversion function not found!');
-                }
-            });
+      <footer>
+        <div>While you type, straight quotes are automatically converted to smart quotes based on context. Use the buttons above to convert in bulk or insert specific characters.</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const root = document.documentElement;
+      const editor = document.getElementById('editor');
+      const bulkSmartBtn = document.getElementById('bulkSmart');
+      const bulkStraightBtn = document.getElementById('bulkStraight');
+      const themeSel = document.getElementById('theme');
+
+      // THEME
+      function applyTheme(value){
+        const map = { light: '', dark: 'dark', hcw: 'hcw', hcb: 'hcb' };
+        const v = map[value] || '';
+        if(v) root.setAttribute('data-theme', v); else root.removeAttribute('data-theme');
+        try { localStorage.setItem('sqc-theme', value); } catch(_){}
+      }
+      (function initTheme(){
+        const saved = (localStorage.getItem('sqc-theme') || 'light');
+        themeSel.value = saved;
+        applyTheme(saved);
+      })();
+      themeSel.addEventListener('change', (e)=> applyTheme(e.target.value));
+
+      // Helpers for classification
+      const isWordChar = c => !!c && /[A-Za-z\d\p{L}\p{M}]/u.test(c);
+      const isDigit = c => !!c && /[0-9]/.test(c);
+      const isSpace = c => !!c && /\s/.test(c);
+      const isOpenBoundary = c => c == null || /[\s([\{\-–—/\"“]/.test(c);
+      const isCloseBoundary = c => c == null || /[\s)\]\}\-–—/\"”.,;:!?]/.test(c);
+
+      function smartCharForDouble(prev, next){
+        // Opening if on an open boundary and next is not whitespace
+        if (isOpenBoundary(prev) && !isSpace(next)) return '“';
+        return '”';
+      }
+
+      function smartCharForSingle(prev, next){
+        // Apostrophe if attached to the left word, OR decade/elision (before a digit)
+        if (isWordChar(prev)) return '’';
+        if (isDigit(next)) return '’'; // e.g., ’90s
+        // Opening if on an open boundary and next is not whitespace
+        if (isOpenBoundary(prev) && !isSpace(next)) return '‘';
+        return '’';
+      }
+
+      function replaceAt(str, idx, ch){
+        return str.slice(0, idx) + ch + str.slice(idx + 1);
+      }
+
+      // Live conversion while typing straight quotes
+      editor.addEventListener('input', function(e){
+        // Only act on direct text insertions of ' or "
+        if (e.inputType !== 'insertText') return;
+        if (e.data !== "'" && e.data !== '"') return;
+
+        const pos = editor.selectionStart; // caret AFTER the inserted char
+        const i = pos - 1; // index of the inserted char
+        if (i < 0) return;
+
+        const text = editor.value;
+        const prev = text[i - 1];
+        const next = text[i + 1];
+        let repl;
+        if (e.data === '"') {
+          repl = smartCharForDouble(prev, next);
+        } else {
+          repl = smartCharForSingle(prev, next);
+        }
+        if (!repl) return;
+        // Replace the just-typed char with the smart variant
+        editor.value = replaceAt(text, i, repl);
+        editor.setSelectionRange(pos, pos);
+      });
+
+      // Bulk converters
+      function smartenAll(s){
+        if (!s) return s;
+        // 1) Double quotes opening
+        s = s.replace(/(^|[\s([\{\-–—/])"(?=\S)/g, '$1“');
+        // 2) Remaining double quotes => closing
+        s = s.replace(/\"/g, '”');
+        // 3) Single quotes before digits => apostrophe (decades, elision)
+        s = s.replace(/(^|[\s([\{\-–—/])'(\d)/g, '$1’$2');
+        // 4) Opening singles
+        s = s.replace(/(^|[\s([\{\-–—/])'(?=\S)/g, '$1‘');
+        // 5) Remaining singles => apostrophe/closing
+        s = s.replace(/'/g, '’');
+        return s;
+      }
+
+      function straightenAll(s){
+        if (!s) return s;
+        return s
+          .replace(/[\u2018\u2019]/g, "'") // singles to straight
+          .replace(/[\u201C\u201D]/g, '"'); // doubles to straight
+      }
+
+      function withSelectionPreserved(textarea, transformer){
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const scroll = textarea.scrollTop;
+        const before = textarea.value;
+        const after = transformer(before);
+        textarea.value = after;
+        // Try to maintain caret reasonably: if selection was collapsed, move by diff
+        if (start === end) {
+          const diff = after.length - before.length;
+          const pos = Math.max(0, start + diff);
+          textarea.setSelectionRange(pos, pos);
+        } else {
+          textarea.setSelectionRange(start, end);
+        }
+        textarea.scrollTop = scroll;
+        textarea.focus();
+      }
+
+      bulkSmartBtn.addEventListener('click', () => withSelectionPreserved(editor, smartenAll));
+      bulkStraightBtn.addEventListener('click', () => withSelectionPreserved(editor, straightenAll));
+
+      // Insertion buttons
+      document.querySelectorAll('[data-insert]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const ch = btn.getAttribute('data-insert');
+          const ta = editor;
+          const start = ta.selectionStart;
+          const end = ta.selectionEnd;
+          const before = ta.value.slice(0, start);
+          const after = ta.value.slice(end);
+          ta.value = before + ch + after;
+          const newPos = start + ch.length;
+          ta.setSelectionRange(newPos, newPos);
+          ta.focus();
         });
-    </script>
+      });
+
+      // Accessibility: Ctrl/Cmd+B bulk smart, Ctrl/Cmd+Shift+B bulk straight
+      document.addEventListener('keydown', (e)=>{
+        const mod = e.ctrlKey || e.metaKey;
+        if (!mod) return;
+        if (e.key.toLowerCase() === 'b' && !e.shiftKey) {
+          e.preventDefault();
+          withSelectionPreserved(editor, smartenAll);
+        } else if (e.key.toLowerCase() === 'b' && e.shiftKey) {
+          e.preventDefault();
+          withSelectionPreserved(editor, straightenAll);
+        }
+      });
+
+      // Optional: focus editor on load
+      setTimeout(()=> editor.focus(), 50);
+    })();
+  </script>
 </body>
 </html>
