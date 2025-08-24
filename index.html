@@ -159,6 +159,84 @@
 
     footer { margin-top: 12px; color: var(--muted); font-size: 12px; }
     code.kbd { padding: 0 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--btn-bg); }
+  
+    /* ---- Mobile/narrow layout enhancements (no desktop changes) ---- */
+    @media (max-width: 640px) {
+      /* Respect notches / safe areas and tighten outer spacing */
+      .container {
+        margin: 12px auto;
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+      }
+
+      /* Stack header; make theme control full-width and easy to tap */
+      header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      header .row {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: space-between;
+      }
+      select.theme {
+        width: 100%;
+        padding: 10px 12px; /* bigger hit target */
+      }
+
+      /* Card + toolbar spacing tweaks */
+      .card { padding: 12px; border-radius: 12px; }
+
+      /* Stack toolbar columns */
+      .toolbar {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      /* Put the two action buttons on a tidy 2-col grid;
+         auto-wraps to 1-col below ~380px (see extra query) */
+      .toolbar .left {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      /* Make the insert character strip horizontally scrollable
+         instead of wrapping into a tall block */
+      .toolbar .right .group {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px; /* room for scrollbar */
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+      .toolbar .right .group .btn,
+      .toolbar .right .group label.small { flex: 0 0 auto; }
+
+      /* Touch-friendly controls without affecting desktop */
+      .btn { padding: 12px 14px; min-height: 44px; }
+      .group .btn { min-height: 40px; padding: 10px 12px; }
+
+      /* Editor: slightly smaller type and dynamic viewport height for mobile keyboards */
+      textarea#editor {
+        font-size: 1rem;
+        padding: 12px 14px 16px;
+        height: 48vh;          /* fallback */
+        min-height: 260px;
+      }
+      @supports (height: 1dvh) {
+        textarea#editor { height: 48dvh; } /* avoids iOS URL bar jumps */
+      }
+
+      footer { font-size: 11px; }
+    }
+
+    /* Extra-small phones: drop action buttons to a single column */
+    @media (max-width: 380px) {
+      .toolbar .left { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
