@@ -7,237 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=IBM+Plex+Serif:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f7f7fb;
-      --fg: #1e2228;
-      --muted: #5b6473;
-      --accent: #3b82f6;
-      --border: #dfe3ea;
-      --btn-bg: #ffffff;
-      --btn-fg: #172033;
-      --btn-hover: #eef2ff;
-      --shadow: 0 10px 24px rgba(0,0,0,.08);
-      --radius: 16px;
-    }
-    [data-theme="dark"] {
-      --bg: #0c1116;
-      --fg: #e6ebf2;
-      --muted: #a0aec0;
-      --accent: #60a5fa;
-      --border: #243141;
-      --btn-bg: #0f1620;
-      --btn-fg: #e6ebf2;
-      --btn-hover: #152033;
-      --shadow: 0 10px 24px rgba(0,0,0,.5);
-    }
-    /* High-contrast white (black on white) */
-    [data-theme="hcw"] {
-      --bg: #ffffff;
-      --fg: #000000;
-      --muted: #000000;
-      --accent: #000000;
-      --border: #000000;
-      --btn-bg: #ffffff;
-      --btn-fg: #000000;
-      --btn-hover: #e6e6e6;
-      --shadow: none;
-    }
-    /* High-contrast black (white on black) */
-    [data-theme="hcb"] {
-      --bg: #000000;
-      --fg: #ffffff;
-      --muted: #ffffff;
-      --accent: #ffffff;
-      --border: #ffffff;
-      --btn-bg: #000000;
-      --btn-fg: #ffffff;
-      --btn-hover: #111111;
-      --shadow: none;
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: "IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      line-height: 1.45;
-    }
-
-    .container {
-      max-width: 980px;
-      margin: clamp(16px, 3vw, 32px) auto;
-      padding: 0 clamp(12px, 2vw, 20px);
-    }
-
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 16px;
-      margin-bottom: 12px;
-    }
-    h1 {
-      font-family: "IBM Plex Serif", Georgia, serif;
-      font-weight: 600;
-      font-size: clamp(22px, 4vw, 34px);
-      letter-spacing: .2px;
-      margin: 0;
-    }
-
-    .card {
-      background: var(--btn-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: clamp(12px, 2vw, 18px);
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: start;
-      margin-top: 8px;
-      margin-bottom: 10px;
-    }
-    .toolbar .left, .toolbar .right { display: flex; flex-wrap: wrap; gap: 8px; }
-
-    select.theme {
-      appearance: none;
-      background: var(--btn-bg);
-      color: var(--btn-fg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font: inherit;
-      box-shadow: var(--shadow);
-    }
-
-    .btn {
-      appearance: none;
-      background: var(--btn-bg);
-      color: var(--btn-fg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font: 500 14px/1 "IBM Plex Sans", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      cursor: pointer;
-      transition: transform .06s ease, background .15s ease, border-color .15s ease;
-      box-shadow: var(--shadow);
-    }
-    .btn:hover { background: var(--btn-hover); }
-    .btn:active { transform: translateY(1px) scale(.99); }
-
-    .btn.primary { border-color: var(--accent); }
-
-    .group {
-      display: inline-flex; gap: 6px; flex-wrap: wrap;
-      background: transparent;
-      align-items: center;
-    }
-
-    label.small { font-size: 12px; color: var(--muted); }
-
-    textarea#editor {
-      width: 100%;
-      height: 52vh;
-      background: var(--bg);
-      color: var(--fg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 16px 18px;
-      font: 400 1.05rem/1.6 "IBM Plex Serif", Georgia, serif;
-      caret-color: var(--accent);
-      outline: none;
-      box-shadow: inset 0 1px 0 rgba(0,0,0,.02);
-    }
-
-    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-
-    footer { margin-top: 12px; color: var(--muted); font-size: 12px; }
-    code.kbd { padding: 0 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--btn-bg); }
-  
-    /* ---- Mobile/narrow layout enhancements (no desktop changes) ---- */
-    @media (max-width: 640px) {
-      /* Respect notches / safe areas and tighten outer spacing */
-      .container {
-        margin: 12px auto;
-        padding-left: max(12px, env(safe-area-inset-left));
-        padding-right: max(12px, env(safe-area-inset-right));
-      }
-
-      /* Stack header; make theme control full-width and easy to tap */
-      header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-      header .row {
-        margin-left: 0 !important;
-        width: 100%;
-        justify-content: space-between;
-      }
-      select.theme {
-        width: 100%;
-        padding: 10px 12px; /* bigger hit target */
-      }
-
-      /* Card + toolbar spacing tweaks */
-      .card { padding: 12px; border-radius: 12px; }
-
-      /* Stack toolbar columns */
-      .toolbar {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      /* Put the two action buttons on a tidy 2-col grid;
-         auto-wraps to 1-col below ~380px (see extra query) */
-      .toolbar .left {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      /* Make the insert character strip horizontally scrollable
-         instead of wrapping into a tall block */
-      .toolbar .right .group {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 4px; /* room for scrollbar */
-        gap: 6px;
-        flex-wrap: nowrap;
-      }
-      .toolbar .right .group .btn,
-      .toolbar .right .group label.small { flex: 0 0 auto; }
-
-      /* Touch-friendly controls without affecting desktop */
-      .btn { padding: 12px 14px; min-height: 44px; }
-      .group .btn { min-height: 40px; padding: 10px 12px; }
-
-      /* Editor: slightly smaller type and dynamic viewport height for mobile keyboards */
-      textarea#editor {
-        font-size: 1rem;
-        padding: 12px 14px 16px;
-        height: 48vh;          /* fallback */
-        min-height: 260px;
-      }
-      @supports (height: 1dvh) {
-        textarea#editor { height: 48dvh; } /* avoids iOS URL bar jumps */
-      }
-
-      footer { font-size: 11px; }
-    }
-
-    /* Extra-small phones: drop action buttons to a single column */
-    @media (max-width: 380px) {
-      .toolbar .left { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container" id="app">
@@ -314,17 +84,17 @@
       const isCloseBoundary = c => c == null || /[\s)\]\}\-–—/\"”.,;:!?]/.test(c);
 
       function smartCharForDouble(prev, next){
-        // Opening if on an open boundary and next is not whitespace
-        if (isOpenBoundary(prev) && !isSpace(next)) return '“';
+        // Decide from the left side only: start-of-line, whitespace, or opening punctuation → opening quote
+        if (isOpenBoundary(prev)) return '“';
         return '”';
       }
 
       function smartCharForSingle(prev, next){
-        // Apostrophe if attached to the left word, OR decade/elision (before a digit)
-        if (isWordChar(prev)) return '’';
-        if (isDigit(next)) return '’'; // e.g., ’90s
-        // Opening if on an open boundary and next is not whitespace
-        if (isOpenBoundary(prev) && !isSpace(next)) return '‘';
+        // Keep apostrophe rules first
+        if (isWordChar(prev)) return '’';   // it's, don't
+        if (isDigit(next))   return '’';   // ’90s
+        // Otherwise decide from the left side only
+        if (isOpenBoundary(prev)) return '‘';
         return '’';
       }
 
@@ -361,13 +131,13 @@
       function smartenAll(s){
         if (!s) return s;
         // 1) Double quotes opening
-        s = s.replace(/(^|[\s([\{\-–—/])"(?=\S)/g, '$1“');
+        s = s.replace(/(^|[\s([\{\-–—/])"/g, '$1“');
         // 2) Remaining double quotes => closing
         s = s.replace(/\"/g, '”');
         // 3) Single quotes before digits => apostrophe (decades, elision)
         s = s.replace(/(^|[\s([\{\-–—/])'(\d)/g, '$1’$2');
         // 4) Opening singles
-        s = s.replace(/(^|[\s([\{\-–—/])'(?=\S)/g, '$1‘');
+        s = s.replace(/(^|[\s([\{\-–—/])'/g, '$1‘');
         // 5) Remaining singles => apostrophe/closing
         s = s.replace(/'/g, '’');
         return s;
